@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import KakaoMap from "../utils/KakaoMap";
 import axios from "axios";
 
@@ -14,23 +14,19 @@ const find = (query) => {
 };
 
 const Map = () => {
-  const [markerPositions, setMarkerPositions] = useState([]);
+  const [documents, setDocuments] = useState([]);
 
   const inputRef = useRef(null);
 
-  const positions = useCallback((documents) => {
-    return documents.map((document) => [+document.y, +document.x]);
-  }, []);
-
   const onClickSearchBtn = async (e) => {
     const res = await find(inputRef.current.value);
-    setMarkerPositions(positions(res.data.documents));
+    setDocuments(res.data.documents);
   };
 
   const onKeyUpSearchInput = async (e) => {
     if (e.key === "Enter") {
       const res = await find(inputRef.current.value);
-      setMarkerPositions(positions(res.data.documents));
+      setDocuments(res.data.documents);
     }
   };
 
@@ -45,7 +41,7 @@ const Map = () => {
       <button type="button" onClick={onClickSearchBtn}>
         search
       </button>
-      <KakaoMap markerPositions={markerPositions} size={[1000, 800]} />
+      <KakaoMap documents={documents} size={[1000, 800]} />
     </div>
   );
 };
